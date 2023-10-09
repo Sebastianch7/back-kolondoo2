@@ -12,7 +12,9 @@ class OperadorasController extends Controller
      */
     public function index()
     {
-        //
+        return view('Operadoras/index', [
+            'titulo' => 'hola Sebas'
+        ]);
     }
 
     /**

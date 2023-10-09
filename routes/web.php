@@ -1,5 +1,8 @@
 <?php
 
+use App\Http\Controllers\ComercializadorasController;
+use App\Http\Controllers\OperadorasController;
+use App\Models\Operadoras;
 use Illuminate\Support\Facades\Route;
 
 /*
@@ -13,6 +16,5 @@ use Illuminate\Support\Facades\Route;
 |
 */
 
-Route::get('/', function () {
-    return view('welcome');
-});
+Route::get('/operadoras', [OperadorasController::class, 'index']);
+Route::get('/comercializadoras', [ComercializadorasController::class, 'index']);
