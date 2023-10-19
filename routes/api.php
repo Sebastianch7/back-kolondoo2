@@ -4,6 +4,8 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
 
+Route::get('/', [ApiController::class, 'index']);
+
 Route::get('getOperadoras', [ApiController::class, 'getOperadorasList']);
 Route::get('getComercializadoras', [ApiController::class, 'getComercializadorasList']);
 Route::get('getComercializadorasGas', [ApiController::class, 'getComercializadorasGasList']);

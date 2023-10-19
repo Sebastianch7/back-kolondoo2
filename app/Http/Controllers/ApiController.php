@@ -10,6 +10,9 @@ use App\Models\Lead;
 
 class ApiController extends Controller
 {
+    public function index(){
+        return view('swagger');
+    }
     /* consultas de las empresas que tienen servicios activos */
     public function getTarifasMovilList()
     {
@@ -108,7 +111,7 @@ class ApiController extends Controller
         return DB::table('tarifasLuz')
             ->join('comercializadoras', 'comercializadoras.id', '=', 'tarifasLuz.comercializadora')
             ->select('comercializadoras.id', 'comercializadoras.nombre', 'comercializadoras.logo')
-            ->groupBy('comercializadora')
+            ->groupBy('tarifasLuz.comercializadora')
             ->get();
     }
 
@@ -117,7 +120,7 @@ class ApiController extends Controller
         return DB::table('tarifasGas')
             ->join('comercializadoras', 'comercializadoras.id', '=', 'tarifasGas.comercializadora')
             ->select('comercializadoras.id', 'comercializadoras.nombre', 'comercializadoras.logo')
-            ->groupBy('comercializadora')
+            ->groupBy('tarifasGas.comercializadora')
             ->get();
     }
 
@@ -139,8 +142,6 @@ class ApiController extends Controller
             ->get();
     }
     /* fin funciones para consultar ofertas comerciales */
-
-
 
     public function newLeadMobile(Request $request)
     {
