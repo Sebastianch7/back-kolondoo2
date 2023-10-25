@@ -101,6 +101,13 @@ class ApiController extends Controller
             ->get();
     }
 
+    public function getValuesFilterFibraMovilList()
+    {
+        return DB::table($this->tabla_movil_fibra)
+            ->selectRaw('ROUND(MAX(GB)+5) as max_gb, ROUND(MAX(precio)+5) as max_precio, ROUND(MIN(GB)-5) as min_gb, ROUND(MIN(precio)-5) as min_precio')
+            ->get();
+    }
+
     public function getValuesFilterFibraList()
     {
         return DB::table($this->tabla_fibra)
@@ -149,8 +156,8 @@ class ApiController extends Controller
     public function getDetailOfferFibraList($id)
     {
         return DB::table($this->tabla_fibra)
-            ->join('1_comercializadoras', '1_comercializadoras.id', '=', $this->tabla_fibra . '.comercializadora')
-            ->select($this->tabla_fibra . '.*', '1_comercializadoras.nombre', '1_comercializadoras.logo')
+            ->join('1_operadoras', '1_operadoras.id', '=', $this->tabla_fibra . '.operadora')
+            ->select($this->tabla_fibra . '.*', '1_operadoras.nombre', '1_operadoras.logo')
             ->where($this->tabla_fibra . '.id', '=', $id)
             ->get();
     }
@@ -190,6 +197,16 @@ class ApiController extends Controller
         return DB::table($this->tabla_movil)
             ->join('1_operadoras', '1_operadoras.id', '=', $this->tabla_movil . '.operadora')
             ->select($this->tabla_movil . '.*', '1_operadoras.nombre', '1_operadoras.logo')
+            ->inRandomOrder()
+            ->take(3)
+            ->get();
+    }
+
+    public function getExtraOfferFibraList()
+    {
+        return DB::table($this->tabla_fibra)
+            ->join('1_operadoras', '1_operadoras.id', '=', $this->tabla_fibra . '.operadora')
+            ->select($this->tabla_fibra . '.*', '1_operadoras.nombre', '1_operadoras.logo')
             ->inRandomOrder()
             ->take(3)
             ->get();
