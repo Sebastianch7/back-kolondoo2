@@ -3,6 +3,10 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\ExtraOfferController;
+use App\Http\Controllers\FilterController;
+use App\Http\Controllers\LeadController;
+use App\Http\Controllers\TarifasController;
 
 Route::get('/', [ApiController::class, 'index']);
 
@@ -14,35 +18,36 @@ Route::get('getComercializadorasLuzGas', [ApiController::class, 'getComercializa
 Route::get('getOperadorasFibraMovil', [ApiController::class, 'getOperadorasFibraMovilList']);
 Route::get('getOperadorasFibraMovilTv', [ApiController::class, 'getOperadorasFibraMovilTvList']);
 /* movil */
-Route::get('getTarifasMovil', [ApiController::class, 'getTarifasMovilList']);
-Route::get('filterMovil', [ApiController::class, 'getValuesFilterMovilList']);
-Route::get('getDetailOffermovil/{id}', [ApiController::class, 'getDetailOfferMovilList']);
-Route::get('getExtraOffermovil', [ApiController::class, 'getExtraOfferMovilList']);
+Route::get('getTarifasMovil', [TarifasController::class, 'getTarifasMovilList']);
+Route::get('filterMovil', [FilterController::class, 'getValuesFilterMovilList']);
+Route::get('getExtraOffermovil', [ExtraOfferController::class, 'getTarifasMovilList']);
+Route::get('getDetailOffermovil/{id}', [TarifasController::class, 'getDetailOfferMovilList']);
 /* Luz */
-Route::get('getTarifasLuz', [ApiController::class, 'getTarifasLuzList']);
-Route::get('getExtraOfferluz', [ApiController::class, 'getExtraOfferLuzList']);
-Route::get('getDetailOfferluz/{id}', [ApiController::class, 'getDetailOfferLuzList']);
+Route::get('getTarifasLuz', [TarifasController::class, 'getTarifasLuzList']);
+Route::get('getExtraOfferluz', [ExtraOfferController::class, 'getExtraOfferLuzList']);
+Route::get('getDetailOfferluz/{id}', [TarifasController::class, 'getTarifasLuzList']);
 /* Gas */
-Route::get('getTarifasGas', [ApiController::class, 'getTarifasGasList']);
-Route::get('getExtraOffergas', [ApiController::class, 'getExtraOfferGasList']);
-Route::get('getDetailOffergas/{id}', [ApiController::class, 'getDetailOfferGasList']);
+Route::get('getTarifasGas', [TarifasController::class, 'getTarifasGasList']);
+Route::get('getExtraOffergas', [ExtraOfferController::class, 'getExtraOfferGasList']);
+Route::get('getDetailOffergas/{id}', [TarifasController::class, 'getTarifasGasList']);
 /* Fibra */
-Route::get('getTarifasFibra', [ApiController::class, 'getTarifasFibraList']);
-Route::get('filterFibra', [ApiController::class, 'getValuesFilterFibraList']);
-Route::get('getExtraOfferfibra', [ApiController::class, 'getExtraOfferFibraList']);
-Route::get('getDetailOfferfibra/{id}', [ApiController::class, 'getDetailOfferFibraList']);
+Route::get('getTarifasFibra', [TarifasController::class, 'getTarifasFibraList']);
+Route::get('filterFibra', [FilterController::class, 'getValuesFilterFibraList']);
+Route::get('getExtraOfferfibra', [ExtraOfferController::class, 'getExtraOfferFibraList']);
+Route::get('getDetailOfferfibra/{id}', [TarifasController::class, 'getTarifasFibraList']);
 /* Luz y Gas */
-Route::get('getTarifasGasLuz', [ApiController::class, 'getTarifasGasLuzList']);
-Route::get('getExtraOfferluz_y_gas', [ApiController::class, 'getExtraOfferGasLuzList']);
-Route::get('getDetailOfferluz_y_gas/{id}', [ApiController::class, 'getDetailOfferGasLuzList']);
+Route::get('getTarifasGasLuz', [TarifasController::class, 'getTarifasGasLuzList']);
+Route::get('getExtraOfferluz_y_gas', [ExtraOfferController::class, 'getExtraOfferGasLuzList']);
+Route::get('getDetailOfferluz_y_gas/{id}', [TarifasController::class, 'getTarifasGasLuzList']);
 /* Fibra y Movil */
-Route::get('getTarifasFibraMovil', [ApiController::class, 'getTarifasFibraMovilList']);
-Route::get('filterMovilFibra', [ApiController::class, 'getValuesFilterFibraMovilList']);
-Route::get('getExtraOffermovil_y_fibra', [ApiController::class, 'getExtraOfferFibraMovilList']);
-Route::get('getDetailOffermovil_y_fibra/{id}', [ApiController::class, 'getDetailOfferFibraMovilList']);
+Route::get('getTarifasFibraMovil', [TarifasController::class, 'getTarifasFibraMovilList']);
+Route::get('filterMovilFibra', [FilterController::class, 'getValuesFilterFibraMovilList']);
+Route::get('getExtraOffermovil_y_fibra', [ExtraOfferController::class, 'getExtraOfferFibraMovilList']);
+Route::get('getDetailOffermovil_y_fibra/{id}', [TarifasController::class, 'getTarifasFibraMovilList']);
 /* Fibra, Movil y TV */
-Route::get('getTarifasfibramovilTv', [ApiController::class, 'getTarifasFibraMovilTvList']);
-Route::get('getExtraOfferfibramoviltv', [ApiController::class, 'getExtraOfferFibraMovilTvList']);
-Route::get('getDetailOfferfibramoviltv/{id}', [ApiController::class, 'getDetailOfferFibraMovilTvList']);
+Route::get('getTarifasFibraMovilTv', [TarifasController::class, 'getTarifasFibraMovilTvList']);
+Route::get('filterMovilFibraTv', [FilterController::class, 'getValuesFilterFibraMovilTvList']);
+Route::get('getExtraOffermovil_fibra_tv', [ExtraOfferController::class, 'getExtraOfferFibraMovilTvList']);
+Route::get('getDetailOffermovil_fibra_tv/{id}', [TarifasController::class, 'getTarifasFibraMovilTvList']);
 /* Leads */
-Route::post('newLeadMobile', [ApiController::class, 'newLeadMobile']);
+Route::post('LeadRegister', [LeadController::class, 'LeadRegisterInfo']);

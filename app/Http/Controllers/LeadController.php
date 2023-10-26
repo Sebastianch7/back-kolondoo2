@@ -7,59 +7,26 @@ use Illuminate\Http\Request;
 
 class LeadController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
-    public function index()
+    public function LeadRegisterInfo(Request $request)
     {
-        //
-    }
+        // Validar los datos del formulario si es necesario
+        /* $request->validate([
+            'idOferta' => 'required',
+            'phone' => 'required',
+            'landing' => 'required',
+        ]);
+     */
+        // Crear una nueva instancia del modelo Lead con los datos del formulario
+        $lead = new Lead([
+            'idOferta' => $request->input('idPlan'),
+            'phone' => $request->input('phoneNumber'),
+            'landing' => $request->input('landing'),
+        ]);
 
-    /**
-     * Show the form for creating a new resource.
-     */
-    public function create()
-    {
-        //
-    }
+        // Guardar el nuevo registro en la base de datos
+        $lead->save();
 
-    /**
-     * Store a newly created resource in storage.
-     */
-    public function store(Request $request)
-    {
-        //
-    }
-
-    /**
-     * Display the specified resource.
-     */
-    public function show(Lead $lead)
-    {
-        //
-    }
-
-    /**
-     * Show the form for editing the specified resource.
-     */
-    public function edit(Lead $lead)
-    {
-        //
-    }
-
-    /**
-     * Update the specified resource in storage.
-     */
-    public function update(Request $request, Lead $lead)
-    {
-        //
-    }
-
-    /**
-     * Remove the specified resource from storage.
-     */
-    public function destroy(Lead $lead)
-    {
-        //
+        // Puedes devolver una respuesta de éxito o redireccionar a otra página
+        return response()->json(['message' => 'Registro de Lead exitoso'], 201);
     }
 }
