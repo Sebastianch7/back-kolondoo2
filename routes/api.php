@@ -49,5 +49,7 @@ Route::get('getTarifasFibraMovilTv', [TarifasController::class, 'getTarifasFibra
 Route::get('filterMovilFibraTv', [FilterController::class, 'getValuesFilterFibraMovilTvList']);
 Route::get('getExtraOffermovil_fibra_tv', [ExtraOfferController::class, 'getExtraOfferFibraMovilTvList']);
 Route::get('getDetailOffermovil_fibra_tv/{id}', [TarifasController::class, 'getTarifasFibraMovilTvList']);
+/* Streaming */
+Route::get('getTarifasStreaming', [TarifasController::class, 'getTarifasStreamingList']);
 /* Leads */
 Route::post('LeadRegister', [LeadController::class, 'LeadRegisterInfo']);
