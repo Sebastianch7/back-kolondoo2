@@ -3,6 +3,7 @@
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\ApiController;
+use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ExtraOfferController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\LeadController;
@@ -53,3 +54,8 @@ Route::get('getDetailOffermovil_fibra_tv/{id}', [TarifasController::class, 'getT
 Route::get('getTarifasStreaming', [TarifasController::class, 'getTarifasStreamingList']);
 /* Leads */
 Route::post('LeadRegister', [LeadController::class, 'LeadRegisterInfo']);
+
+
+/* blog */
+Route::get('getBlog', [BlogController::class, 'getBlogList']);
+Route::get('getBlogById/{id}', [BlogController::class, 'getBlogId']);
