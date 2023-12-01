@@ -27,40 +27,36 @@ class BlogController extends Controller
     {
         return DB::table('SEO_BLOG')->select('blog.*', 'categorias.*', 'blog.entradilla as entrada')->leftJoin('blog', 'blog.SEO_id', 'SEO_BLOG.id')->leftJoin('categorias', 'blog.categoria_id', 'categorias.id')->where('SEO_BLOG.url_amigable', '=', $id)->get();
     }
-    /* Genera datos para vista de precios de la Luz (Vertical de Gestiones) en instancia Española */
-    /* #[NoReturn]  */
-    public function preciosLuzREEApi()
+    
+    public function getBlogDescatados()
     {
-        header("Access-Control-Allow-Origin: https://dev.vuskoo.com");
-        header("Access-Control-Allow-Methods: GET, POST, OPTIONS");
-        header("Access-Control-Allow-Headers: Content-Type");
-        $today = now();
-        $GLOBALS["country_instance"] = "es";
-
-        $apiURL = 'https://apidatos.ree.es/es/datos/mercados/precios-mercados-tiempo-real?start_date=' . $today->format('Y-m-d') . 'T00:00&end_date=' . $today->format('Y-m-d') . 'T23:00&time_trunc=hour';
-
-        // Make the HTTP request
-        $response = file_get_contents($apiURL);
-
-        if ($response === false) {
-            // Handle error
-            die('Error fetching data from API.');
+        $today = Carbon::now()->format("Y-m-d");
+        $destacados = DB::table('SEO_BLOG')
+            ->leftJoin('blog','SEO_BLOG.id','=','blog.SEO_id')
+            ->leftJoin('categorias','categorias.id','=','blog.categoria_id')
+            ->select(
+                'SEO_BLOG.url_amigable as blog_item_url_amigable',
+                'SEO_BLOG.controlador',
+                'SEO_BLOG.funcion',
+                'SEO_BLOG.vista',
+                'SEO_BLOG.ruta_activa',
+                'blog.categoria_id',
+                'blog.imagen_principal_movil',
+                'blog.atributo_imagen_principal',
+                'blog.titulo',
+                'categorias.url_amigable as cat_url_amigable',
+                'categorias.categoria as cat_categoria'
+            );
+        if(env('APP_ENV') === "production")
+        {
+            $destacados->where('SEO_BLOG.ruta_activa',true);
         }
-
-        // Decode JSON response
-        $data = json_decode($response, true);
-
-        if ($data === null) {
-            // Handle JSON decoding error
-            die('Error decoding JSON response.');
-        }
-
-        $jsonData = json_encode($data, true);
-
-        // Set the appropriate headers to indicate JSON content
-        header('Content-Type: application/json');
-
-        // Return JSON response
-        echo $jsonData;
+        return $destacados->where('categorias.categoria_activa',true)
+            ->where('categorias.id',6)
+            ->where('blog.fecha_publicacion','<=',$today)
+            ->where(function ($query) use ($today) {$query->where('blog.fecha_expiracion','>=',$today)->orWhereNull('blog.fecha_expiracion');})
+            ->limit(4)
+            ->orderBy('blog.fecha_publicacion','DESC')
+            ->get();
     }
 }

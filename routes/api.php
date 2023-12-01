@@ -59,4 +59,4 @@ Route::post('LeadRegister', [LeadController::class, 'LeadRegisterInfo']);
 /* blog */
 Route::get('getBlog', [BlogController::class, 'getBlogList']);
 Route::get('getBlogById/{id}', [BlogController::class, 'getBlogId']);
-Route::get('getPriceLightService', [BlogController::class, 'preciosLuzREEApi']);
+Route::get('getDestacados', [BlogController::class, 'getBlogDescatados']);
