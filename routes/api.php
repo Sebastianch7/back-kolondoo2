@@ -58,5 +58,7 @@ Route::post('LeadRegister', [LeadController::class, 'LeadRegisterInfo']);
 
 /* blog */
 Route::get('getBlog', [BlogController::class, 'getBlogList']);
+Route::get('getBlogHome', [BlogController::class, 'getBlogHomeList']);
+Route::get('getBlog/{categoria}', [BlogController::class, 'getBlogList']);
 Route::get('getBlogById/{id}', [BlogController::class, 'getBlogId']);
-Route::get('getDestacados', [BlogController::class, 'getBlogDescatados']);
+Route::get('getBlogDestacados', [BlogController::class, 'getBlogDescatados']);
