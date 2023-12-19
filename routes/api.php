@@ -7,7 +7,10 @@ use App\Http\Controllers\BlogController;
 use App\Http\Controllers\ExtraOfferController;
 use App\Http\Controllers\FilterController;
 use App\Http\Controllers\LeadController;
+use App\Http\Controllers\HelperController;
 use App\Http\Controllers\TarifasController;
+use App\Http\Controllers\UtilsController;
+use HelperController as GlobalHelperController;
 
 Route::get('/', [ApiController::class, 'index']);
 
@@ -62,3 +65,8 @@ Route::get('getBlogHome', [BlogController::class, 'getBlogHomeList']);
 Route::get('getBlog/{categoria}', [BlogController::class, 'getBlogList']);
 Route::get('getBlogById/{id}', [BlogController::class, 'getBlogId']);
 Route::get('getBlogDestacados', [BlogController::class, 'getBlogDescatados']);
+
+
+Route::get('getDataLocation', [UtilsController::class, 'checkingGuestLocationApi']);
+Route::get('getDataIp', [UtilsController::class, 'obtencionIpRealVisitante']);
+
