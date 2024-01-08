@@ -1,6 +1,7 @@
 <?php
 
 namespace App\Http\Controllers;
+
 use Illuminate\Database\ConnectionInterface;
 use Illuminate\Http\Client\ConnectionException;
 use Illuminate\Support\Facades\Http;
@@ -11,16 +12,13 @@ use Illuminate\Http\Request;
 
 class UtilsController extends Controller
 {
-    private function formatTelephone(string $phone): string
+    function formatTelephone(string $phone): string
     {
         //Revisión de formato telefónico. Pepephone Api solo acepta numeración normal y con 34 delante. La validación por env de números nacionales incluye +34,34 y 0034 previo al número de 9 cifras.
-        $phone = str_replace(array(" ","+"),"",$phone);
-        if(Str::substr($phone, 0, 4) === "0034" && strlen($phone) === 13)
-        {
+        return str_replace(array(" ", "+"), "", $phone);
+        if (Str::substr($phone, 0, 4) === "0034" && strlen($phone) === 13) {
             $phone = Str::substr($phone, 4);
-        }
-        elseif(Str::substr($phone, 0, 2) === "34" && strlen($phone) === 11)
-        {
+        } elseif (Str::substr($phone, 0, 2) === "34" && strlen($phone) === 11) {
             $phone = Str::substr($phone, 2);
         }
 
@@ -53,52 +51,6 @@ class UtilsController extends Controller
     }
 
     /**
-     * Función de registro eventos IVR
-     *
-     * @param int $event_type
-     * @param string|null $source_identifier
-     * @param string|null $redirected_to
-     * @param int|null $ocm_campaign_id
-     * @param string|null $phone
-     * @param string $call_status
-     * @param string $mensaje
-     * @param int|null $ivr_option_selected
-     * @param string $data_transferred
-     * @param string|null $API_record_id
-     * @param string|null $origin_incept_date
-     * @return void
-     */
-    function IvrEventRecords(
-        int $event_type,
-        string|null $source_identifier,
-        string|null $redirected_to,
-        int|null $ocm_campaign_id,
-        string|null $phone,
-        string $call_status,
-        string $mensaje,
-        int|null $ivr_option_selected,
-        string $data_transferred,
-        string|null $API_record_id,
-        string|null $origin_incept_date
-    ): void {
-        DB::table('IVR_events')->insert(
-            array(
-                'event_type' => $event_type, //Tipo de evento registrado: INFO, ERROR, ETC...
-                'source_identifier' => $source_identifier, //Identificador de registro de la campaña IVR
-                'redirected_to' => $redirected_to, //Identificador de registro de la campaña IVR
-                'ocm_campaign_id' => $ocm_campaign_id, //Identificador numérico del «IVR Dialplan»  de origen en OCM
-                'phone' => $phone,
-                'call_status' => $call_status,
-                'message' => $mensaje,
-                'ivr_option_selected' => $ivr_option_selected,
-                'data_transferred' => $data_transferred,
-                'API_record_id' => $API_record_id,
-                'origin_incept_date' => $origin_incept_date,
-            )
-        );
-    }
-
-    /**
      * Obtencion de la IP REAL del visitante
      *
      * @return string
@@ -119,12 +71,10 @@ class UtilsController extends Controller
         foreach ($headers as $header) {
             if (isset($_SERVER[$header])) {
                 $return = $_SERVER[$header];
-                // Puedes detener el bucle aquí si encuentras una dirección IP válida
                 break;
             }
         }
 
-        // Si no se encuentra ninguna dirección IP válida, establecer "no registrado"
         if ($return === null) {
             $return = "no registrado";
         }
@@ -143,7 +93,7 @@ class UtilsController extends Controller
     function checkingGuestLocationApi(bool $just_country_code = null, $ip = null): mixed
     {
         $visitorIp = empty($ip) ? $this->obtencionIpRealVisitante() : $ip;
-        $visitorIp == '127.0.0.1' ? '181.53.96.39' : $visitorIp;
+        $visitorIp = "181.53.96.39";
         $ipapi_url = "https://api.ipapi.com/api/$visitorIp?";
         $ipapi_key = "213e41b9b546cb54f68186a1d2b6b394";
         $response = null;
@@ -156,17 +106,17 @@ class UtilsController extends Controller
             ])->acceptJson()
                 ->timeout(10)
                 ->get(
-                    $ipapi_url.$visitorIp,
+                    $ipapi_url,
                     [
                         'access_key' => $ipapi_key,
                         'language' => 'es',
                         'output' => 'json',
                     ]
                 );
-                $this->registroDeErrores(15, 'IpAPI', 'Conexion exitosa');
+            $this->registroDeErrores(15, 'IpAPI', 'Conexion exitosa');
         } catch (ConnectionException $e) {
             $message = "Fallo de IpAPI no responde. - ERROR: " . $e->getMessage();
-            $this->registroDeErrores(6, 'IpAPI', $message);
+            //$this->registroDeErrores(6, 'IpAPI', $message);
             return null;
         }
 
@@ -185,13 +135,23 @@ class UtilsController extends Controller
                 } else {
                     $message .= " SIN INFO";
                 }
-                $this->registroDeErrores( 6,'IpAPI',$message);
+                //$this->registroDeErrores(6, 'IpAPI', $message);
                 return null;
             }
         } else {
             $message = "Fallo de IpAPI objeto vacío - Objeto response: " . json_encode($response) . ", Objeto enviado: " . json_encode(['access_key' => $ipapi_key, 'language' => 'es', 'output' => 'json', 'fields' => 'ip,type,continent_code,continent_name,country_code,country_name,region_name,city,zip,latitude,longitude']);
-            $this->registroDeErrores(6, 'IpAPI', $message);
+            //$this->registroDeErrores(6, 'IpAPI', $message);
             return null;
         }
+    }
+
+    /**
+     * Comprueba si el telefono está en la lista negra
+     *
+     * @param string $phone
+     */
+    function isBannedPhone(mixed $phone): bool
+    {
+        return DB::connection('common_event_log')->table('banned_phones')->where('phone', preg_replace('/\s+/', '', $phone))->exists();
     }
 }

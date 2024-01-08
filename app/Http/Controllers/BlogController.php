@@ -32,11 +32,11 @@ class BlogController extends Controller
         ];
 
         if ($categoria == 'null') {
-            return DB::table('blog')->select('blog.id', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->orderBy('id', 'desc')->get();
+            return DB::table('blog')->select('blog.id', 'blog.hashtags', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->orderBy('id', 'desc')->get();
         } else if ($categoria == 'mas-visitadas') {
-            return DB::table('blog')->select('blog.id', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->orderBy('blog.visitas', 'desc')->get();
+            return DB::table('blog')->select('blog.id', 'blog.hashtags', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->orderBy('blog.visitas', 'desc')->get();
         } else {
-            return DB::table('blog')->select('blog.id', 'categoria_id', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->where('categoria_id', $categorias[$categoria])->orderBy('id', 'desc')->get();
+            return DB::table('blog')->select('blog.id', 'blog.hashtags', 'categoria_id', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->where('categoria_id', $categorias[$categoria])->orderBy('id', 'desc')->get();
         }
     }
 

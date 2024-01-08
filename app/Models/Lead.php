@@ -13,6 +13,9 @@ class Lead extends Model
         'id',
         'idOferta',
         'phone',
-        'landing'
+        'landing',
+        'urlOffer',
+        'company',
+        'idResponse'
     ];
 }

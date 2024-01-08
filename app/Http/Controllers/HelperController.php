@@ -168,7 +168,8 @@ function obtencionIpRealVisitante(): string
 /* IPAPI  Devuelve null, código de país en minúsculas o objeto */
 function checkingGuestLocationApi(bool $just_country_code, $ip = null): mixed
 {
-    $visitorIp = empty($ip)?obtencionIpRealVisitante():$ip;
+    echo $visitorIp = empty($ip)?obtencionIpRealVisitante():$ip;
+    die();
     $ipapi_url = "https://api.ipapi.com/api/";
     $ipapi_key = "213e41b9b546cb54f68186a1d2b6b394";
     $response = null;
@@ -1734,7 +1735,8 @@ function getJsUtmParams(): string
  * @param string $table
  * @return string
  */
-#[Pure] function getMarket(string $table): string
+//[Pure] 
+function getMarket(string $table): string
 {
     $market = "";
     if(Str::contains($table,"TELCO"))
