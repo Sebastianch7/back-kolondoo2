@@ -113,7 +113,8 @@ class UtilsController extends Controller
                         'output' => 'json',
                     ]
                 );
-            $this->registroDeErrores(15, 'IpAPI', 'Conexion exitosa');
+
+            //$this->registroDeErrores(15, 'IpAPI', 'Conexion exitosa');
         } catch (ConnectionException $e) {
             $message = "Fallo de IpAPI no responde. - ERROR: " . $e->getMessage();
             //$this->registroDeErrores(6, 'IpAPI', $message);
