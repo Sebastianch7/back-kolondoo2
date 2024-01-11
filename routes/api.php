@@ -38,22 +38,22 @@ Route::get('getDetailOffercomparadortarifasluzygas/{id}', [TarifasController::cl
 /* movil */
 Route::get('getTarifasMovil', [TarifasController::class, 'getTarifasMovilList']);
 Route::get('filterMovil', [FilterController::class, 'getValuesFilterMovilList']);
-Route::get('getExtraOffermovil', [ExtraOfferController::class, 'getTarifasMovilList']);
+Route::get('getExtraOffercomparadormovil', [ExtraOfferController::class, 'getExtraOfferMovilList']);
 Route::get('getDetailOffercomparadormovil/{id}', [TarifasController::class, 'getDetailOfferMovilList']);
 /* Fibra */
 Route::get('getTarifasFibra', [TarifasController::class, 'getTarifasFibraList']);
 Route::get('filterFibra', [FilterController::class, 'getValuesFilterFibraList']);
-Route::get('getExtraOfferfibra', [ExtraOfferController::class, 'getExtraOfferFibraList']);
+Route::get('getExtraOffercomparadorfibra', [ExtraOfferController::class, 'getExtraOfferFibraList']);
 Route::get('getDetailOffercomparadorfibra/{id}', [TarifasController::class, 'getDetailOfferFibraList']);
 /* Fibra y Movil */
 Route::get('getTarifasFibraMovil', [TarifasController::class, 'getTarifasFibraMovilList']);
 Route::get('filterMovilFibra', [FilterController::class, 'getValuesFilterFibraMovilList']);
-Route::get('getExtraOffercomparadortarifasfibraymovil', [ExtraOfferController::class, 'getExtraOfferFibraMovilList']);
+Route::get('getExtraOffermovilyfibra', [ExtraOfferController::class, 'getExtraOfferFibraMovilList']);
 Route::get('getDetailOffercomparadortarifasfibraymovil/{id}', [TarifasController::class, 'getDetailOfferFibraMovilList']);
 /* Fibra, Movil y TV */
 Route::get('getTarifasFibraMovilTv', [TarifasController::class, 'getTarifasFibraMovilTvList']);
 Route::get('filterMovilFibraTv', [FilterController::class, 'getValuesFilterFibraMovilTvList']);
-Route::get('getExtraOffermovil_fibra_tv', [ExtraOfferController::class, 'getExtraOfferFibraMovilTvList']);
+Route::get('getExtraOffercomparadormovilfibratv', [ExtraOfferController::class, 'getExtraOfferFibraMovilTvList']);
 Route::get('getDetailOffercomparadorfibramoviltv/{id}', [TarifasController::class, 'getDetailOfferFibraMovilTvList']);
 /* Streaming */
 Route::get('getTarifasStreaming', [TarifasController::class, 'getTarifasStreamingList']);
