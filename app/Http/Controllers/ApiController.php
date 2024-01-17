@@ -51,7 +51,7 @@ class ApiController extends Controller
         return DB::table($this->tabla_gas)
             ->join('1_comercializadoras', '1_comercializadoras.id', '=', $this->tabla_gas . '.comercializadora')
             ->select('1_comercializadoras.id', '1_comercializadoras.nombre', '1_comercializadoras.logo')
-            ->where('1_operadoras.operadora_activa','=','1')
+            ->where('1_comercializadoras.comercializadora_activa','=','1')
             ->groupBy($this->tabla_gas . '.comercializadora')
             ->get();
     }

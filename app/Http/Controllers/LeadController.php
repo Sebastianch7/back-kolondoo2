@@ -7,6 +7,8 @@ use Illuminate\Http\Request;
 use Illuminate\Http\JsonResponse;
 use Illuminate\Support\Facades\Http;
 use App\Http\Controllers\UtilsController;
+use App\Models\Contactenos;
+use App\Models\NewsLetter;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Str;
 use Illuminate\Http\Client\ConnectionException;
@@ -65,14 +67,46 @@ class LeadController extends Controller
 
     public function FormContactanosRegister(Request $request)
     {
-        /* $request->validate([
-                        'nombre' => 'required',
-                        'consulta' => 'required',
-                        'email' => 'required',
-                    ]); */
-        /* echo $request->input('consulta');
-                    echo $request->input('email');
-                    echo $request->input('check'); */
+        // Crear una nueva instancia del modelo formContactenos con los datos del formulario
+        $contactenos = new Contactenos([
+            'name' => $request->input('nombre'),
+            'message' => $request->input('consulta'),
+            'email' => $request->input('email'),
+            'politica' => true
+        ]);
+
+        if ($contactenos->save()) {
+            return response()->json([
+                'message' => 'Mensaje enviado con exito',
+                'status' => 201
+            ], 200);
+        }else{
+            return response()->json([
+                'message' => 'En este momento no podemos procesar tu mensaje',
+                'status' => 503
+            ], 200);
+        }
+    }
+    
+    public function FormNewsletterRegister(Request $request)
+    {
+        // Crear una nueva instancia del modelo formContactenos con los datos del formulario
+        $contactenos = new NewsLetter([
+            'email' => $request->input('email'),
+            'politica' => true
+        ]);
+
+        if ($contactenos->save()) {
+            return response()->json([
+                'message' => 'Suscripción realizada con exito',
+                'status' => 201
+            ], 200);
+        }else{
+            return response()->json([
+                'message' => 'En este momento no podemos procesar tu suscripción',
+                'status' => 503
+            ], 200);
+        }
     }
 
     public function leadMovil($lead, $idLead)

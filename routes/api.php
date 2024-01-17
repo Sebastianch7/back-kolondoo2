@@ -24,7 +24,7 @@ Route::get('getOperadorasFibraMovilTv', [ApiController::class, 'getOperadorasFib
 
 /* Luz */
 Route::get('getTarifasLuz', [TarifasController::class, 'getTarifasLuzList']);
-Route::get('getExtraOffercomparadortarifasluz', [ExtraOfferController::class, 'getExtraOfferLuzList']);
+Route::get('getExtraOfferluz', [ExtraOfferController::class, 'getExtraOfferLuzList']);
 Route::get('getDetailOffercomparadortarifasluz/{id}', [TarifasController::class, 'getDetailOfferLuzList']);
 /* Gas */
 Route::get('getTarifasGas', [TarifasController::class, 'getTarifasGasList']);
@@ -69,5 +69,6 @@ Route::get('getDataIp', [UtilsController::class, 'obtencionIpRealVisitante']);
 /* Leads */
 Route::post('LeadRegister', [LeadController::class, 'LeadRegisterInfo']);
 Route::post('contactanosRegister', [LeadController::class, 'FormContactanosRegister']);
+Route::post('NewsletterRegister', [LeadController::class, 'FormNewsletterRegister']);
 
 
