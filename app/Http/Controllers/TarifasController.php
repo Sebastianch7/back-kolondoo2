@@ -153,7 +153,7 @@ class TarifasController extends Controller
     {
         return DB::table($this->tabla_fibra)
             ->join('1_operadoras', '1_operadoras.id', '=', $this->tabla_fibra . '.operadora')
-            ->select($this->tabla_fibra . '.*', '1_operadoras.nombre', '1_operadoras.logo')
+            ->select($this->tabla_fibra . '.*', '1_operadoras.nombre', '1_operadoras.logo','1_operadoras.politica_privacidad')
             ->where($this->tabla_fibra . '.id', '=', $id)
             ->get();
     }

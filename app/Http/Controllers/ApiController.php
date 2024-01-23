@@ -42,6 +42,7 @@ class ApiController extends Controller
             ->join('1_comercializadoras', '1_comercializadoras.id', '=', $this->tabla_luz . '.comercializadora')
             ->select('1_comercializadoras.id', '1_comercializadoras.nombre', '1_comercializadoras.logo')
             ->where('1_comercializadoras.comercializadora_activa','=','1')
+            ->where($this->tabla_luz.'.tarifa_activa','=','1')
             ->groupBy($this->tabla_luz . '.comercializadora')
             ->get();
     }
@@ -52,6 +53,7 @@ class ApiController extends Controller
             ->join('1_comercializadoras', '1_comercializadoras.id', '=', $this->tabla_gas . '.comercializadora')
             ->select('1_comercializadoras.id', '1_comercializadoras.nombre', '1_comercializadoras.logo')
             ->where('1_comercializadoras.comercializadora_activa','=','1')
+            ->where($this->tabla_gas.'.tarifa_activa','=','1')
             ->groupBy($this->tabla_gas . '.comercializadora')
             ->get();
     }
@@ -62,6 +64,7 @@ class ApiController extends Controller
             ->join('1_operadoras', '1_operadoras.id', '=', $this->tabla_movil . '.operadora')
             ->select('1_operadoras.id', '1_operadoras.nombre', '1_operadoras.logo')
             ->where('1_operadoras.operadora_activa','=','1')
+            ->where($this->tabla_movil.'.tarifa_activa','=','1')
             ->groupBy('operadora')
             ->get();
     }
@@ -72,6 +75,7 @@ class ApiController extends Controller
             ->join('1_operadoras', '1_operadoras.id', '=', $this->tabla_fibra . '.operadora')
             ->select('1_operadoras.id', '1_operadoras.nombre', '1_operadoras.logo')
             ->where('1_operadoras.operadora_activa','=','1')
+            ->where($this->tabla_fibra.'.tarifa_activa','=','1')
             ->groupBy('operadora')
             ->get();
     }
@@ -82,6 +86,7 @@ class ApiController extends Controller
             ->join('1_comercializadoras', '1_comercializadoras.id', '=', $this->tabla_luz_gas . '.comercializadora')
             ->select('1_comercializadoras.id', '1_comercializadoras.nombre', '1_comercializadoras.logo')
             ->where('1_comercializadoras.comercializadora_activa','=','1')
+            ->where($this->tabla_luz_gas.'.tarifa_activa','=','1')
             ->groupBy('comercializadora')
             ->get();
     }
@@ -92,6 +97,7 @@ class ApiController extends Controller
             ->join('1_operadoras', '1_operadoras.id', '=', $this->tabla_movil_fibra . '.operadora')
             ->select('1_operadoras.id', '1_operadoras.nombre', '1_operadoras.logo')
             ->where('1_operadoras.operadora_activa','=','1')
+            ->where($this->tabla_movil_fibra.'.tarifa_activa','=','1')
             ->groupBy('operadora')
             ->get();
     }
@@ -102,6 +108,7 @@ class ApiController extends Controller
             ->join('1_operadoras', '1_operadoras.id', '=', $this->tabla_movil_fibra_tv . '.operadora')
             ->select('1_operadoras.id', '1_operadoras.nombre', '1_operadoras.logo')
             ->where('1_operadoras.operadora_activa','=','1')
+            ->where($this->tabla_movil_fibra_tv.'.tarifa_activa','=','1')
             ->groupBy('operadora')
             ->get();
     }
