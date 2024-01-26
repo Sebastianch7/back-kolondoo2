@@ -48,7 +48,7 @@ class BlogController extends Controller
 
     public function getBlogId($id)
     {
-        return DB::table('SEO_BLOG')->select('blog.*', 'categorias.*', 'blog.entradilla as entrada')->leftJoin('blog', 'blog.SEO_id', 'SEO_BLOG.id')->leftJoin('categorias', 'blog.categoria_id', 'categorias.id')->where('SEO_BLOG.url_amigable', '=', $id)->get();
+        return DB::table('SEO_BLOG')->select('SEO_BLOG.metatitulo as seo_titulo','SEO_BLOG.metadescripcion as seo_descripcion','metabots','blog.*', 'categorias.*', 'blog.entradilla as entrada')->leftJoin('blog', 'blog.SEO_id', 'SEO_BLOG.id')->leftJoin('categorias', 'blog.categoria_id', 'categorias.id')->where('SEO_BLOG.url_amigable', '=', $id)->get();
     }
 
     public function getBlogDescatados()

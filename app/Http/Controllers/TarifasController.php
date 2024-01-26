@@ -35,6 +35,7 @@ class TarifasController extends Controller
             ->select($this->tabla_fibra . '.*', '1_operadoras.nombre', '1_operadoras.logo')
             ->where($this->tabla_fibra.'.tarifa_activa','=','1')
             ->where('1_operadoras.operadora_activa','=','1')
+            ->orderBy('orden_parrilla_general', 'desc')
             ->orderBy('precio', 'asc')
             ->get();
     }

@@ -10,7 +10,6 @@ use App\Http\Controllers\LeadController;
 use App\Http\Controllers\HelperController;
 use App\Http\Controllers\TarifasController;
 use App\Http\Controllers\UtilsController;
-use HelperController as GlobalHelperController;
 
 //Route::get('/', [ApiController::class, 'index']);
 
