@@ -32,24 +32,41 @@ class BlogController extends Controller
         ];
 
         if ($categoria == 'null') {
-            return DB::table('blog')->select('categorias.url_amigable as categoria_url','categorias.categoria','blog.id', 'blog.hashtags', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->join('categorias', 'categorias.id', 'blog.categoria_id')->orderBy('id', 'desc')->get();
+            return DB::table('blog')->select('categorias.url_amigable as categoria_url', 'categorias.categoria', 'blog.id', 'blog.hashtags', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->join('categorias', 'categorias.id', 'blog.categoria_id')->orderBy('id', 'desc')->get();
         } else if ($categoria == 'mas-visitadas') {
-            return DB::table('blog')->select('categorias.url_amigable as categoria_url','categorias.categoria','blog.id', 'blog.hashtags', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->join('categorias', 'categorias.id', 'blog.categoria_id')->orderBy('blog.visitas', 'desc')->get();
+            return DB::table('blog')->select('categorias.url_amigable as categoria_url', 'categorias.categoria', 'blog.id', 'blog.hashtags', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->join('categorias', 'categorias.id', 'blog.categoria_id')->orderBy('blog.visitas', 'desc')->get();
         } else {
-            return DB::table('blog')->select('categorias.url_amigable as categoria_url','categorias.categoria','blog.id', 'blog.hashtags', 'categoria_id', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->join('categorias', 'categorias.id', 'blog.categoria_id')->where('categoria_id', $categorias[$categoria])->orderBy('id', 'desc')->get();
+            return DB::table('blog')->select('categorias.url_amigable as categoria_url', 'categorias.categoria', 'blog.id', 'blog.hashtags', 'categoria_id', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->join('categorias', 'categorias.id', 'blog.categoria_id')->where('categoria_id', $categorias[$categoria])->orderBy('id', 'desc')->get();
         }
     }
 
     public function getBlogHomeList()
     {
 
-        return DB::table('blog')->select('categorias.url_amigable as categoria_url','blog.id', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->join('categorias', 'categorias.id', 'blog.categoria_id')->orderBy('id', 'desc')->limit(3)->get();
+        return DB::table('blog')->select('categorias.url_amigable as categoria_url', 'blog.id', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->join('categorias', 'categorias.id', 'blog.categoria_id')->orderBy('id', 'desc')->limit(3)->get();
     }
 
     public function getBlogId($id)
     {
-        return DB::table('SEO_BLOG')->select('SEO_BLOG.metatitulo as seo_titulo','SEO_BLOG.metadescripcion as seo_descripcion','metabots','blog.*', 'categorias.*', 'blog.entradilla as entrada')->leftJoin('blog', 'blog.SEO_id', 'SEO_BLOG.id')->leftJoin('categorias', 'blog.categoria_id', 'categorias.id')->where('SEO_BLOG.url_amigable', '=', $id)->get();
+        return DB::table('SEO_BLOG')->select('SEO_BLOG.metatitulo as seo_titulo', 'SEO_BLOG.metadescripcion as seo_descripcion', 'blog.*', 'categorias.*', 'blog.entradilla as entrada')->leftJoin('blog', 'blog.SEO_id', 'SEO_BLOG.id')->leftJoin('categorias', 'blog.categoria_id', 'categorias.id')->where('SEO_BLOG.url_amigable', '=', $id)->get();
     }
+
+    public function getSuministrosList($id = null)
+    {
+        $query = DB::table('SEO_GESTIONES')
+            ->select('SEO_GESTIONES.*','gestiones.titulo as titulo')
+            ->leftJoin('gestiones', 'gestiones.SEO_id', '=', 'SEO_GESTIONES.id')
+            ->leftJoin('categorias_gestiones', 'gestiones.categoria_id', '=', 'categorias_gestiones.id')
+            ->where('SEO_GESTIONES.funcion', 'suministros')
+            ->where('SEO_GESTIONES.ruta_activa', 1);
+            if ($id !== null) {
+                $query->select('SEO_GESTIONES.metatitulo as seo_titulo', 'SEO_GESTIONES.metadescripcion as seo_descripcion', 'gestiones.*', 'categorias_gestiones.*', 'gestiones.entradilla as entrada');
+                $query->where('SEO_GESTIONES.url_amigable', $id);
+        }
+
+        return $query->get();
+    }
+
 
     public function getBlogDescatados()
     {
@@ -58,10 +75,8 @@ class BlogController extends Controller
             ->leftJoin('blog', 'SEO_BLOG.id', '=', 'blog.SEO_id')
             ->leftJoin('categorias', 'categorias.id', '=', 'blog.categoria_id')
             ->select(
-                'SEO_BLOG.url_amigable as blog_item_url_amigable',
-                'SEO_BLOG.controlador',
+                'SEO_BLOG.url_amigable as url_amigable',
                 'SEO_BLOG.funcion',
-                'SEO_BLOG.vista',
                 'SEO_BLOG.ruta_activa',
                 'blog.categoria_id',
                 'blog.fecha_publicacion',

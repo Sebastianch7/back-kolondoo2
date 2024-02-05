@@ -60,6 +60,9 @@ Route::get('getBlogHome', [BlogController::class, 'getBlogHomeList']);
 Route::get('getBlog/{categoria}', [BlogController::class, 'getBlogList']);
 Route::get('getBlogById/{id}', [BlogController::class, 'getBlogId']);
 Route::get('getBlogDestacados', [BlogController::class, 'getBlogDescatados']);
+/* Suministros */
+Route::get('getSuministros', [BlogController::class, 'getSuministrosList']);
+Route::get('getSuministrosById/{id}', [BlogController::class, 'getSuministrosList']);
 /* Obtener data de localizacion por Ip */
 Route::get('getDataLocation', [UtilsController::class, 'checkingGuestLocationApi']);
 Route::get('getDataIp', [UtilsController::class, 'obtencionIpRealVisitante']);
