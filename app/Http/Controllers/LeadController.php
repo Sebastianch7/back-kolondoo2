@@ -90,7 +90,6 @@ class LeadController extends Controller
     
     public function FormNewsletterRegister(Request $request)
     {
-        // Crear una nueva instancia del modelo formContactenos con los datos del formulario
         $contactenos = new NewsLetter([
             'email' => $request->input('email'),
             'politica' => true

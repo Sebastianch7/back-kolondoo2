@@ -57,12 +57,22 @@ Route::get('getTarifasStreaming', [TarifasController::class, 'getTarifasStreamin
 /* blog */
 Route::get('getBlog', [BlogController::class, 'getBlogList']);
 Route::get('getBlogHome', [BlogController::class, 'getBlogHomeList']);
-Route::get('getBlog/{categoria}', [BlogController::class, 'getBlogList']);
-Route::get('getBlogById/{id}', [BlogController::class, 'getBlogId']);
-Route::get('getBlogDestacados', [BlogController::class, 'getBlogDescatados']);
+Route::get('getBlog/{categoria}/{id?}', [BlogController::class, 'getBlogList']);
+Route::get('getMenuBlog', [BlogController::class, 'getMenuBlogList']);
 /* Suministros */
 Route::get('getSuministros', [BlogController::class, 'getSuministrosList']);
 Route::get('getSuministrosById/{id}', [BlogController::class, 'getSuministrosList']);
+/* Seguros */
+Route::get('getSeguros', [BlogController::class, 'getSegurosList']);
+Route::get('getSegurosById/{id}', [BlogController::class, 'getSegurosList']);
+/* Cobertura movil */
+Route::get('getCoberturaMovil', [BlogController::class, 'getCoberturaMovilList']);
+Route::get('getCoberturaMovilById/{id}', [BlogController::class, 'getCoberturaMovilList']);
+/* Cobertura fibra */
+Route::get('getCoberturaFibra', [BlogController::class, 'getCoberturaFibraList']);
+Route::get('getCoberturaFibraById/{id}', [BlogController::class, 'getCoberturaFibraList']);
+/* optimizacion */
+Route::get('getGestion/{funcion}/{id?}', [BlogController::class, 'getGestionList']);
 /* Obtener data de localizacion por Ip */
 Route::get('getDataLocation', [UtilsController::class, 'checkingGuestLocationApi']);
 Route::get('getDataIp', [UtilsController::class, 'obtencionIpRealVisitante']);
@@ -70,5 +80,3 @@ Route::get('getDataIp', [UtilsController::class, 'obtencionIpRealVisitante']);
 Route::post('LeadRegister', [LeadController::class, 'LeadRegisterInfo']);
 Route::post('contactanosRegister', [LeadController::class, 'FormContactanosRegister']);
 Route::post('NewsletterRegister', [LeadController::class, 'FormNewsletterRegister']);
-
-

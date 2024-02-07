@@ -18,26 +18,54 @@ use Mockery\Exception;
 
 class BlogController extends Controller
 {
-    public function getBlogList($categoria)
+    public function getMenuBlogList()
     {
-        $categoria = strtolower($categoria);
-        $categorias = [
-            'internet' => 1,
-            'movil' => 2,
-            'television' => 3,
-            'energia' => 4,
-            'hogar' => 5,
-            'mejores-ofertas' => 6,
-            'seguros' => 7
-        ];
+        return DB::connection('mysql_second')->table('wp_term_taxonomy')->select('wp_terms.name', 'wp_terms.slug')->join('wp_terms', 'wp_terms.term_id', '=', 'wp_term_taxonomy.term_id')->where('taxonomy', "category")->get();
+    }
 
-        if ($categoria == 'null') {
-            return DB::table('blog')->select('categorias.url_amigable as categoria_url', 'categorias.categoria', 'blog.id', 'blog.hashtags', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->join('categorias', 'categorias.id', 'blog.categoria_id')->orderBy('id', 'desc')->get();
-        } else if ($categoria == 'mas-visitadas') {
-            return DB::table('blog')->select('categorias.url_amigable as categoria_url', 'categorias.categoria', 'blog.id', 'blog.hashtags', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->join('categorias', 'categorias.id', 'blog.categoria_id')->orderBy('blog.visitas', 'desc')->get();
-        } else {
-            return DB::table('blog')->select('categorias.url_amigable as categoria_url', 'categorias.categoria', 'blog.id', 'blog.hashtags', 'categoria_id', 'blog.visitas', 'blog.fecha_publicacion', 'blog.categoria_id', 'blog.imagen_principal_escritorio', 'blog.imagen_principal_movil', 'blog.titulo', 'blog.entradilla', 'SEO_BLOG.url_amigable')->join('SEO_BLOG', 'SEO_BLOG.id', 'SEO_id')->join('categorias', 'categorias.id', 'blog.categoria_id')->where('categoria_id', $categorias[$categoria])->orderBy('id', 'desc')->get();
+    public function getBlogList($categoria = null, $id = null)
+    {
+        $query = DB::connection('mysql_second')->table('wp_posts')
+            ->select(
+                'wp_yoast_indexable.open_graph_image as imagen',
+                'wp_terms.name as categoria',
+                'wp_terms.slug as categoria_slug',
+                'wp_posts.post_date as fecha_publicacion',
+                'wp_posts.post_title as titulo',
+                'wp_posts.post_content as contenido',
+                'wp_posts.post_excerpt as entradilla',
+                'wp_yoast_indexable.title as seo_titulo',
+                'wp_yoast_indexable.description as seo_descripcion',
+                'wp_yoast_indexable.breadcrumb_title as migapan',
+                'wp_yoast_indexable.estimated_reading_time_minutes as tiempo_lectura',
+                'wp_posts.post_name as url_amigable',
+                'wp_users.display_name as autor'
+            )
+            ->join('wp_yoast_indexable', 'wp_yoast_indexable.object_id', '=', 'wp_posts.ID')
+            ->join('wp_users', 'wp_users.ID', '=', 'wp_posts.post_author')
+            ->join('wp_term_relationships', 'wp_term_relationships.object_id', '=', 'wp_posts.ID')
+            ->join('wp_term_taxonomy', 'wp_term_taxonomy.term_taxonomy_id', '=', 'wp_term_relationships.term_taxonomy_id')
+            ->join('wp_terms', 'wp_terms.term_id', '=', 'wp_term_taxonomy.term_id')
+            
+            ->where('wp_posts.post_status', '=', 'publish')
+            ->where('wp_posts.post_type', '=', 'post')
+            ->where('wp_yoast_indexable.object_type', '=', 'post')
+            ->where('wp_yoast_indexable.object_sub_type', '=', 'post')
+            ->where('wp_yoast_indexable.post_status', '=', 'publish')
+            ->where('wp_term_taxonomy.taxonomy', '=', 'category')
+            ->orderBy('wp_posts.ID', 'desc');
+
+        // Optional condition based on the variable
+        if ($id) {
+            $query->where('wp_posts.post_name', '=', $id);
         }
+        if ($categoria) {
+            $query->where('wp_terms.slug', '=', $categoria);
+        }else{
+            $query->where('wp_terms.slug', '!=', 'destacado');
+        }
+
+        return $query->get();
     }
 
     public function getBlogHomeList()
@@ -51,52 +79,19 @@ class BlogController extends Controller
         return DB::table('SEO_BLOG')->select('SEO_BLOG.metatitulo as seo_titulo', 'SEO_BLOG.metadescripcion as seo_descripcion', 'blog.*', 'categorias.*', 'blog.entradilla as entrada')->leftJoin('blog', 'blog.SEO_id', 'SEO_BLOG.id')->leftJoin('categorias', 'blog.categoria_id', 'categorias.id')->where('SEO_BLOG.url_amigable', '=', $id)->get();
     }
 
-    public function getSuministrosList($id = null)
+    public function getGestionList($funcion, $id = null)
     {
         $query = DB::table('SEO_GESTIONES')
-            ->select('SEO_GESTIONES.*','gestiones.titulo as titulo')
+            ->select('SEO_GESTIONES.*','gestiones.atributo_imagen_principal as alt_img','gestiones.titulo as titulo','gestiones.imagen_principal_escritorio as imagen','gestiones.cuerpo as contenido','gestiones.propietario as autor','gestiones.fecha_publicacion')
             ->leftJoin('gestiones', 'gestiones.SEO_id', '=', 'SEO_GESTIONES.id')
             ->leftJoin('categorias_gestiones', 'gestiones.categoria_id', '=', 'categorias_gestiones.id')
-            ->where('SEO_GESTIONES.funcion', 'suministros')
-            ->where('SEO_GESTIONES.ruta_activa', 1);
-            if ($id !== null) {
-                $query->select('SEO_GESTIONES.metatitulo as seo_titulo', 'SEO_GESTIONES.metadescripcion as seo_descripcion', 'gestiones.*', 'categorias_gestiones.*', 'gestiones.entradilla as entrada');
-                $query->where('SEO_GESTIONES.url_amigable', $id);
+            ->where('SEO_GESTIONES.funcion', $funcion);
+        
+        if ($id !== null) {
+            $query->select('SEO_GESTIONES.*','gestiones.atributo_imagen_principal as alt_img','gestiones.titulo as titulo','gestiones.imagen_principal_escritorio as imagen','gestiones.cuerpo as contenido','gestiones.propietario as autor','gestiones.fecha_publicacion');
+            $query->where('SEO_GESTIONES.url_amigable', $id);
         }
 
         return $query->get();
-    }
-
-
-    public function getBlogDescatados()
-    {
-        $today = Carbon::now()->format("Y-m-d");
-        $destacados = DB::table('SEO_BLOG')
-            ->leftJoin('blog', 'SEO_BLOG.id', '=', 'blog.SEO_id')
-            ->leftJoin('categorias', 'categorias.id', '=', 'blog.categoria_id')
-            ->select(
-                'SEO_BLOG.url_amigable as url_amigable',
-                'SEO_BLOG.funcion',
-                'SEO_BLOG.ruta_activa',
-                'blog.categoria_id',
-                'blog.fecha_publicacion',
-                'blog.imagen_principal_movil',
-                'blog.atributo_imagen_principal',
-                'blog.titulo',
-                'categorias.url_amigable as cat_url_amigable',
-                'categorias.categoria as cat_categoria'
-            );
-        if (env('APP_ENV') === "production") {
-            $destacados->where('SEO_BLOG.ruta_activa', true);
-        }
-        return $destacados->where('categorias.categoria_activa', true)
-            ->where('categorias.id', 6)
-            ->where('blog.fecha_publicacion', '<=', $today)
-            ->where(function ($query) use ($today) {
-                $query->where('blog.fecha_expiracion', '>=', $today)->orWhereNull('blog.fecha_expiracion');
-            })
-            ->limit(4)
-            ->orderBy('blog.fecha_publicacion', 'DESC')
-            ->get();
     }
 }
