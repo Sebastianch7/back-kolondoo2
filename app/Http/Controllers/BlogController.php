@@ -28,7 +28,8 @@ class BlogController extends Controller
         $query = DB::connection('mysql_second')->table('wp_posts')
             ->select(
                 'wp_yoast_indexable.open_graph_image as imagen',
-
+                'wp_terms.slug as term_slug',
+                'wp_terms.name as term_categoria',
                 'wp_posts.post_date as fecha_publicacion',
                 'wp_posts.post_title as titulo',
                 'wp_posts.post_content as contenido',
@@ -67,6 +68,9 @@ class BlogController extends Controller
         }
         if ($categoria) {
             $query->where('wp_terms.slug', '=', $categoria);
+        }
+        if($categoria !== 'destacado'){
+            $query->where('wp_terms.slug', '!=', 'destacado');
         }
 
         return $query->get();
