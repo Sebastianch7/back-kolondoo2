@@ -28,8 +28,7 @@ class BlogController extends Controller
         $query = DB::connection('mysql_second')->table('wp_posts')
             ->select(
                 'wp_yoast_indexable.open_graph_image as imagen',
-                'wp_terms.name as categoria',
-                'wp_terms.slug as categoria_slug',
+
                 'wp_posts.post_date as fecha_publicacion',
                 'wp_posts.post_title as titulo',
                 'wp_posts.post_content as contenido',
@@ -39,14 +38,21 @@ class BlogController extends Controller
                 'wp_yoast_indexable.breadcrumb_title as migapan',
                 'wp_yoast_indexable.estimated_reading_time_minutes as tiempo_lectura',
                 'wp_posts.post_name as url_amigable',
-                'wp_users.display_name as autor'
+                'wp_users.display_name as autor',
+                'wp_postmeta.meta_value as categoriaPrincipal',
+                'principal.slug as categoria_slug',
+                'principal.name as categoria',
+
             )
             ->join('wp_yoast_indexable', 'wp_yoast_indexable.object_id', '=', 'wp_posts.ID')
             ->join('wp_users', 'wp_users.ID', '=', 'wp_posts.post_author')
             ->join('wp_term_relationships', 'wp_term_relationships.object_id', '=', 'wp_posts.ID')
             ->join('wp_term_taxonomy', 'wp_term_taxonomy.term_taxonomy_id', '=', 'wp_term_relationships.term_taxonomy_id')
             ->join('wp_terms', 'wp_terms.term_id', '=', 'wp_term_taxonomy.term_id')
-            
+            ->join('wp_postmeta', 'wp_postmeta.post_id', '=', 'wp_posts.ID')
+            ->join('wp_terms as principal', 'principal.term_id', '=', 'wp_postmeta.meta_value')
+
+            ->where('wp_postmeta.meta_key', '=', '_yoast_wpseo_primary_category')
             ->where('wp_posts.post_status', '=', 'publish')
             ->where('wp_posts.post_type', '=', 'post')
             ->where('wp_yoast_indexable.object_type', '=', 'post')
@@ -61,10 +67,48 @@ class BlogController extends Controller
         }
         if ($categoria) {
             $query->where('wp_terms.slug', '=', $categoria);
-        }else{
-            $query->where('wp_terms.slug', '!=', 'destacado');
         }
 
+        return $query->get();
+    }
+
+    public function getBlogPreviewList($id)
+    {
+        $query = DB::connection('mysql_second')->table('wp_posts')
+            ->select(
+                'wp_yoast_indexable.open_graph_image as imagen',
+                'wp_posts.post_date as fecha_publicacion',
+                'wp_posts.post_title as titulo',
+                'wp_posts.post_content as contenido',
+                'wp_posts.post_excerpt as entradilla',
+                'wp_yoast_indexable.title as seo_titulo',
+                'wp_yoast_indexable.description as seo_descripcion',
+                'wp_yoast_indexable.breadcrumb_title as migapan',
+                'wp_yoast_indexable.estimated_reading_time_minutes as tiempo_lectura',
+                'wp_posts.post_name as url_amigable',
+                'wp_users.display_name as autor',
+                'wp_postmeta.meta_value as categoriaPrincipal',
+                'principal.slug as categoria_slug',
+                'principal.name as categoria'
+            )
+            ->join('wp_yoast_indexable', 'wp_yoast_indexable.object_id', '=', 'wp_posts.ID')
+            ->join('wp_users', 'wp_users.ID', '=', 'wp_posts.post_author')
+            ->join('wp_term_relationships', 'wp_term_relationships.object_id', '=', 'wp_posts.ID')
+            ->join('wp_term_taxonomy', 'wp_term_taxonomy.term_taxonomy_id', '=', 'wp_term_relationships.term_taxonomy_id')
+            ->join('wp_terms', 'wp_terms.term_id', '=', 'wp_term_taxonomy.term_id')
+            ->join('wp_postmeta', 'wp_postmeta.post_id', '=', 'wp_posts.ID')
+            ->join('wp_terms as principal', 'principal.term_id', '=', 'wp_postmeta.meta_value')
+            
+            ->where('wp_postmeta.meta_key', '=', '_yoast_wpseo_primary_category')
+            /* ->where('wp_posts.post_status', '=', 'publish') */
+            ->where('wp_posts.post_type', '=', 'post')
+            ->where('wp_yoast_indexable.object_type', '=', 'post')
+            ->where('wp_yoast_indexable.object_sub_type', '=', 'post')
+            /* ->where('wp_yoast_indexable.post_status', '=', 'publish') */
+            ->where('wp_term_taxonomy.taxonomy', '=', 'category')
+            ->where('wp_posts.ID', '=', $id)
+            ->orderBy('wp_posts.ID', 'desc');
+        
         return $query->get();
     }
 
@@ -82,13 +126,13 @@ class BlogController extends Controller
     public function getGestionList($funcion, $id = null)
     {
         $query = DB::table('SEO_GESTIONES')
-            ->select('SEO_GESTIONES.*','gestiones.atributo_imagen_principal as alt_img','gestiones.titulo as titulo','gestiones.imagen_principal_escritorio as imagen','gestiones.cuerpo as contenido','gestiones.propietario as autor','gestiones.fecha_publicacion')
+            ->select('SEO_GESTIONES.*', 'gestiones.atributo_imagen_principal as alt_img', 'gestiones.titulo as titulo', 'gestiones.imagen_principal_escritorio as imagen', 'gestiones.cuerpo as contenido', 'gestiones.propietario as autor', 'gestiones.fecha_publicacion')
             ->leftJoin('gestiones', 'gestiones.SEO_id', '=', 'SEO_GESTIONES.id')
             ->leftJoin('categorias_gestiones', 'gestiones.categoria_id', '=', 'categorias_gestiones.id')
             ->where('SEO_GESTIONES.funcion', $funcion);
-        
+
         if ($id !== null) {
-            $query->select('SEO_GESTIONES.*','gestiones.atributo_imagen_principal as alt_img','gestiones.titulo as titulo','gestiones.imagen_principal_escritorio as imagen','gestiones.cuerpo as contenido','gestiones.propietario as autor','gestiones.fecha_publicacion');
+            $query->select('SEO_GESTIONES.*', 'gestiones.atributo_imagen_principal as alt_img', 'gestiones.titulo as titulo', 'gestiones.imagen_principal_escritorio as imagen', 'gestiones.cuerpo as contenido', 'gestiones.propietario as autor', 'gestiones.fecha_publicacion');
             $query->where('SEO_GESTIONES.url_amigable', $id);
         }
 

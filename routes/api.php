@@ -56,6 +56,7 @@ Route::get('getDetailOffercomparadorfibramoviltv/{id}', [TarifasController::clas
 Route::get('getTarifasStreaming', [TarifasController::class, 'getTarifasStreamingList']);
 /* blog */
 Route::get('getBlog', [BlogController::class, 'getBlogList']);
+Route::get('getBlogPreview/{id}', [BlogController::class, 'getBlogPreviewList']);
 Route::get('getBlogHome', [BlogController::class, 'getBlogHomeList']);
 Route::get('getBlog/{categoria}/{id?}', [BlogController::class, 'getBlogList']);
 Route::get('getMenuBlog', [BlogController::class, 'getMenuBlogList']);
