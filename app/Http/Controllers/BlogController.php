@@ -66,7 +66,7 @@ class BlogController extends Controller
         if ($id) {
             $query->where('wp_posts.post_name', '=', $id);
         }
-        if ($categoria) {
+        if ($categoria && $id == null) {
             $query->where('wp_terms.slug', '=', $categoria);
         }
         if($categoria !== 'destacado'){
